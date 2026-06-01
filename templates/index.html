@@ -39,10 +39,17 @@
                     Build a professional, ATS-optimized resume in minutes. Use expert-crafted phrases and industry-leading templates to stand out.
                 </p>
                 <div class="hero-buttons">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg" style="border-radius:var(--radius-md);box-shadow:var(--shadow-lg);">
+                        Go to Dashboard
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                    {% else %}
                     <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg" style="border-radius:var(--radius-md);box-shadow:var(--shadow-lg);">
                         Get Started Free
                         <span class="material-symbols-outlined">arrow_forward</span>
                     </a>
+                    {% endif %}
                     <a href="#features" class="btn btn-secondary btn-lg" style="border-radius:var(--radius-md);">
                         <span class="material-symbols-outlined">play_circle</span>
                         Learn More
@@ -197,9 +204,15 @@
             <h2 class="text-display" style="margin-bottom:var(--space-lg);">Ready to make your next big move?</h2>
             <p class="text-body-lg" style="opacity:0.8;max-width:600px;margin:0 auto var(--space-xl);">Join thousands of job seekers who secured their dream roles at top tech companies using ResumeCraft.</p>
             <div style="display:flex;justify-content:center;gap:var(--space-md);flex-wrap:wrap;">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-lg" style="background:white;color:var(--primary);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);">
+                    Go to My Dashboard
+                </a>
+                {% else %}
                 <a href="{{ url_for('register') }}" class="btn btn-lg" style="background:white;color:var(--primary);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);">
                     Create My Resume Now
                 </a>
+                {% endif %}
                 <a href="#features" class="btn btn-lg" style="background:transparent;color:white;border:1px solid rgba(255,255,255,0.3);border-radius:var(--radius-md);">
                     Browse Templates
                 </a>
