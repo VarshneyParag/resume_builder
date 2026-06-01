@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Account Settings — ResumeCraft{% endblock %}
+
+{% block body %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">description</span>
+        </div>
+        <div class="sidebar-brand-text">
+            <h1>ResumeCraft</h1>
+            <p>Professional Suite</p>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">edit_note</span>
+            Resumes
+        </a>
+        <a href="{{ url_for('settings') }}" class="sidebar-link active">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">settings</span>
+            Settings
+        </a>
+    </nav>
+
+    <div class="sidebar-cta">
+        <a href="{{ url_for('create_resume') }}" class="btn btn-primary" style="width:100%;border-radius:var(--radius-md);padding:var(--space-md);">
+            <span class="material-symbols-outlined">add</span>
+            New Resume
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <a href="#" class="sidebar-link" id="help-sidebar-btn">
+            <span class="material-symbols-outlined">help</span>
+            Help
+        </a>
+        <a href="{{ url_for('logout') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">logout</span>
+            Sign Out
+        </a>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-with-sidebar">
+    <!-- Header -->
+    <header class="page-header">
+        <div>
+            <h2>Account Settings</h2>
+            <p class="text-body-md" style="color:var(--on-surface-variant);">Update your profile information and account preferences.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-md);position:relative;">
+            <button class="btn-icon" id="header-notif-btn" style="position:relative;">
+                <span class="material-symbols-outlined">notifications</span>
+                <span style="position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--error);border-radius:var(--radius-full);"></span>
+            </button>
+            <div id="header-notif-dropdown" class="custom-dropdown-menu">
+                <div class="dropdown-header">Recent Notifications</div>
+                <div class="dropdown-item">
+                    <span class="material-symbols-outlined" style="color:var(--primary);">check_circle</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">AI Writer Activated</div>
+                        <div style="font-size:11px;color:var(--on-surface-variant);">Ready to write your resume summary.</div>
+                    </div>
+                </div>
+                <div class="dropdown-item">
+                    <span class="material-symbols-outlined" style="color:var(--secondary);">info</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Welcome to ResumeCraft!</div>
+                        <div style="font-size:11px;color:var(--on-surface-variant);">Start crafting your stellar resume now.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="header-profile-btn" style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--secondary-container);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--outline-variant);cursor:pointer;">
+                <span class="material-symbols-outlined" style="color:var(--secondary);">person</span>
+            </div>
+            <div id="header-profile-dropdown" class="custom-dropdown-menu">
+                <div class="dropdown-header" style="border-bottom:none;padding-bottom:2px;">{{ current_user.name }}</div>
+                <div style="font-size:12px;color:var(--on-surface-variant);padding:0 var(--space-lg) var(--space-sm);border-bottom:1px solid var(--outline-variant);">{{ current_user.email }}</div>
+                <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('settings') }}" class="dropdown-item">
+                    <span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+                <a href="{{ url_for('logout') }}" class="dropdown-item" style="color:var(--error);border-top:1px solid var(--outline-variant);">
+                    <span class="material-symbols-outlined" style="color:var(--error);">logout</span>
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Settings Content Area -->
+    <div style="max-width:800px;margin-top:var(--space-xl);display:flex;flex-direction:column;gap:var(--space-xl);">
+        
+        <!-- Form Profile Section -->
+        <div class="card" style="padding:var(--space-xl);">
+            <h3 class="text-headline-sm" style="margin-bottom:var(--space-md);color:var(--primary);display:flex;align-items:center;gap:8px;">
+                <span class="material-symbols-outlined">manage_accounts</span>
+                Personal Information
+            </h3>
+            <form method="POST" action="{{ url_for('settings') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:var(--space-md);">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="name" class="form-input" value="{{ current_user.name }}" required placeholder="e.g. Parag Sharma">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-input" value="{{ current_user.email }}" required placeholder="your@email.com">
+                    </div>
+                </div>
+                <div style="margin-top:var(--space-lg);display:flex;justify-content:flex-end;">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="material-symbols-outlined">save</span>
+                        Save Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Form Security Section -->
+        <div class="card" style="padding:var(--space-xl);">
+            <h3 class="text-headline-sm" style="margin-bottom:var(--space-md);color:var(--primary);display:flex;align-items:center;gap:8px;">
+                <span class="material-symbols-outlined">lock</span>
+                Security & Password
+            </h3>
+            <form method="POST" action="{{ url_for('settings') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group" style="margin-bottom:var(--space-md);">
+                    <label class="form-label">New Password</label>
+                    <input type="password" name="password" class="form-input" minlength="8" required placeholder="Minimum 8 characters">
+                    <span class="form-hint">Choose a strong password containing letters and numbers.</span>
+                </div>
+                <div style="display:flex;justify-content:flex-end;">
+                    <button type="submit" class="btn btn-secondary">
+                        <span class="material-symbols-outlined">key</span>
+                        Update Password
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Connected Accounts Section -->
+        <div class="card" style="padding:var(--space-xl);">
+            <h3 class="text-headline-sm" style="margin-bottom:var(--space-md);color:var(--primary);display:flex;align-items:center;gap:8px;">
+                <span class="material-symbols-outlined">link</span>
+                Connected Accounts
+            </h3>
+            <p class="text-body-sm" style="color:var(--on-surface-variant);margin-bottom:var(--space-lg);">Link your professional accounts to streamline login processes.</p>
+            
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <!-- Google Connection Row -->
+                <div style="display:flex;align-items:center;justify-content:between;padding:var(--space-md);background:var(--surface-container-low);border-radius:var(--radius);border:1px solid var(--outline-variant);">
+                    <div style="display:flex;align-items:center;gap:var(--space-md);">
+                        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                        <div>
+                            <div style="font-weight:600;font-size:14px;">Google Account</div>
+                            <div style="font-size:12px;color:var(--on-surface-variant);" id="google-status-text">Connected as {{ current_user.email if 'googleuser' in current_user.email else 'Not connected' }}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="switch-control">
+                            <input type="checkbox" class="switch-input" id="google-connect-toggle" {% if 'googleuser' in current_user.email %}checked{% endif %}>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Help Overlay Modal -->
+    <div id="help-overlay-modal" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h3>
+                    <span class="material-symbols-outlined">help</span>
+                    ResumeCraft Support Center
+                </h3>
+                <button class="custom-modal-close" id="help-modal-close">×</button>
+            </div>
+            <div class="custom-modal-body">
+                <h4 style="font-weight:700;color:var(--primary);">Frequently Asked Questions</h4>
+                <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                    <div>
+                        <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">How does the AI Resume Writer work?</h5>
+                        <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">When editing a resume, click the **AI Writer** button next to Summary or Experience. Enter your job role and keywords, then click Generate. The AI will draft high-impact statements that you can instantly insert into your fields.</p>
+                    </div>
+                    <div style="height:1px;background:var(--outline-variant);"></div>
+                    <div>
+                        <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">How do I download a PDF of my resume?</h5>
+                        <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">Simply click on the **Download PDF** button in the header of the resume editor. The PDF will be created dynamically and saved in your computer's Downloads folder.</p>
+                    </div>
+                    <div style="height:1px;background:var(--outline-variant);"></div>
+                    <div>
+                        <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">What is Profile Completeness?</h5>
+                        <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">Profile Completeness measures how comprehensive your default resume is. Complete all five steps (Basics, Work History, Education, Skills, and Projects) to achieve a 100% score and ensure your resume is fully optimized for ATS filters.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-modal-footer">
+                <button class="btn btn-primary" id="help-modal-ok">Got it</button>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

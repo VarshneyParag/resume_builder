@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Preview — {{ resume.title }} — ResumeCraft{% endblock %}
+
+{% block body %}
+<!-- Top Bar -->
+<header class="top-nav">
+    <nav class="top-nav-inner">
+        <a href="{{ url_for('dashboard') }}" style="display:flex;align-items:center;gap:var(--space-sm);text-decoration:none;">
+            <span class="material-symbols-outlined text-primary">arrow_back</span>
+            <span class="brand">ResumeCraft</span>
+        </a>
+        <div style="display:flex;align-items:center;gap:var(--space-md);">
+            <a href="{{ url_for('edit_resume', resume_id=resume.id) }}" class="btn btn-secondary">
+                <span class="material-symbols-outlined">edit</span>
+                Edit Resume
+            </a>
+            <a href="{{ url_for('download_pdf', resume_id=resume.id) }}" class="btn btn-primary btn-lg">
+                <span class="material-symbols-outlined">download</span>
+                Download PDF
+            </a>
+        </div>
+    </nav>
+</header>
+
+<main style="background:var(--surface-container);min-height:calc(100vh - 64px);padding:var(--space-xl);display:flex;justify-content:center;">
+    <div class="pdf-resume" style="background:white;box-shadow:var(--shadow-xl);border-radius:4px;max-width:800px;width:100%;padding:48px;">
+        <!-- Header -->
+        <div class="pdf-header">
+            <div style="display:flex;align-items:flex-start;gap:var(--space-lg);">
+                {% if pd and pd.photo_path %}
+                <img src="{{ url_for('uploaded_file', filename=pd.photo_path.replace('uploads/photos/', '')) }}" class="pdf-photo" alt="Profile Photo">
+                {% endif %}
+                <div>
+                    <h1 class="pdf-name">{{ pd.full_name if pd else 'Your Name' }}</h1>
+                    <p class="pdf-title">{{ pd.job_title if pd else 'Job Title' }}</p>
+                </div>
+            </div>
+            <div class="pdf-contact">
+                {% if pd %}
+                {% if pd.email %}<p>{{ pd.email }}</p>{% endif %}
+                {% if pd.phone %}<p>{{ pd.phone }}</p>{% endif %}
+                {% if pd.address %}<p>{{ pd.address }}</p>{% endif %}
+                {% if pd.linkedin %}<p>{{ pd.linkedin }}</p>{% endif %}
+                {% if pd.github %}<p>{{ pd.github }}</p>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Summary -->
+        {% if pd and pd.profile_summary %}
+        <div class="pdf-section">
+            <h2 class="pdf-section-title">Professional Summary</h2>
+            <p class="pdf-entry-desc">{{ pd.profile_summary }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Work Experience -->
+        {% if resume.work_experience %}
+        <div class="pdf-section">
+            <h2 class="pdf-section-title">Work Experience</h2>
+            {% for exp in resume.work_experience %}
+            <div class="pdf-entry">
+                <div class="pdf-entry-header">
+                    <span class="pdf-entry-title">{{ exp.job_title }}{% if exp.company %} — {{ exp.company }}{% endif %}</span>
+                    <span class="pdf-entry-date">{{ exp.start_date }}{% if exp.end_date %} – {{ exp.end_date }}{% else %} – Present{% endif %}</span>
+                </div>
+                {% if exp.description %}
+                <p class="pdf-entry-desc">{{ exp.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Education -->
+        {% if resume.education %}
+        <div class="pdf-section">
+            <h2 class="pdf-section-title">Education</h2>
+            {% for edu in resume.education %}
+            <div class="pdf-entry">
+                <div class="pdf-entry-header">
+                    <span class="pdf-entry-title">{{ edu.degree }}</span>
+                    <span class="pdf-entry-date">{{ edu.year }}</span>
+                </div>
+                <p class="pdf-entry-subtitle">{{ edu.institution }}{% if edu.percentage %} • {{ edu.percentage }}{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Skills -->
+        {% if resume.skills %}
+        <div class="pdf-section">
+            <h2 class="pdf-section-title">Skills</h2>
+            <div class="pdf-skills-list">
+                {% for skill in resume.skills %}
+                <span class="pdf-skill-chip">{{ skill.skill_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Projects -->
+        {% if resume.projects %}
+        <div class="pdf-section">
+            <h2 class="pdf-section-title">Projects</h2>
+            {% for proj in resume.projects %}
+            <div class="pdf-entry">
+                <div class="pdf-entry-header">
+                    <span class="pdf-entry-title">{{ proj.name }}</span>
+                    {% if proj.tech_stack %}
+                    <span class="pdf-entry-date">{{ proj.tech_stack }}</span>
+                    {% endif %}
+                </div>
+                {% if proj.description %}
+                <p class="pdf-entry-desc">{{ proj.description }}</p>
+                {% endif %}
+                {% if proj.live_link %}
+                <a href="{{ proj.live_link }}" style="font-size:12px;color:var(--primary);" target="_blank">{{ proj.live_link }}</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,17 @@
+# Python virtual environment and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# Flask local files
+.env
+instance/
+*.db
+
+# Uploaded user photos
+uploads/photos/*
+!uploads/photos/.gitkeep

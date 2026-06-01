@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block title %}ResumeCraft | Build Professional Resumes Effortlessly{% endblock %}
+
+{% block body %}
+<!-- Top Navigation Bar -->
+<header class="top-nav">
+    <nav class="top-nav-inner">
+        <div style="display:flex;align-items:center;gap:var(--space-md);">
+            <span class="brand">ResumeCraft</span>
+        </div>
+        <div class="nav-links" style="display:flex;align-items:center;gap:var(--space-xl);">
+            <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_authenticated %}
+            <a class="nav-link" href="{{ url_for('dashboard') }}">Resumes</a>
+            {% endif %}
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-md);">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">My Resumes</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Sign In</a>
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started Free</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<main>
+    <!-- Hero Section -->
+    <section class="hero animate-on-scroll">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="badge">
+                    <span class="material-symbols-outlined" style="color:var(--primary);font-size:18px;">auto_awesome</span>
+                    <span>AI-Powered Resume Builder</span>
+                </div>
+                <h1>Land Your Dream Job with a <span class="text-primary">Stellar Resume</span></h1>
+                <p class="text-body-lg" style="color:var(--secondary);max-width:500px;">
+                    Build a professional, ATS-optimized resume in minutes. Use expert-crafted phrases and industry-leading templates to stand out.
+                </p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg" style="border-radius:var(--radius-md);box-shadow:var(--shadow-lg);">
+                        Get Started Free
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                    <a href="#features" class="btn btn-secondary btn-lg" style="border-radius:var(--radius-md);">
+                        <span class="material-symbols-outlined">play_circle</span>
+                        Learn More
+                    </a>
+                </div>
+                <div class="social-proof">
+                    <div class="avatar-stack">
+                        <img src="https://i.pravatar.cc/80?img=1" alt="User">
+                        <img src="https://i.pravatar.cc/80?img=5" alt="User">
+                        <img src="https://i.pravatar.cc/80?img=8" alt="User">
+                    </div>
+                    <p class="text-body-sm" style="color:var(--secondary);">
+                        Joined by <strong style="color:var(--on-surface);">10,000+ professionals</strong> this month
+                    </p>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-image-glow"></div>
+                <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&h=400&fit=crop" alt="Resume Editor Preview">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div style="text-align:center;margin-bottom:80px;">
+                <span class="text-label-md text-primary" style="text-transform:uppercase;letter-spacing:0.1em;">Unmatched Features</span>
+                <h2 class="text-headline-lg" style="margin-top:var(--space-sm);">Tools designed for your success</h2>
+            </div>
+            <div class="bento-grid">
+                <!-- Feature 1: Live Editor -->
+                <div class="bento-item animate-on-scroll" style="grid-column:span 7;background:var(--surface-container-low);border-radius:var(--radius-xl);overflow:hidden;">
+                    <div class="bento-icon" style="background:var(--primary-container);">
+                        <span class="material-symbols-outlined" style="color:var(--primary);">edit_note</span>
+                    </div>
+                    <h3 class="text-headline-md">Interactive Live Editor</h3>
+                    <p class="text-body-md" style="color:var(--on-surface-variant);max-width:380px;">
+                        Watch your resume evolve in real-time. Adjust layouts, colors, and fonts with a single click while getting instant feedback.
+                    </p>
+                    <div style="margin-top:var(--space-xl);height:160px;background:white;border-radius:var(--radius-lg) var(--radius-lg) 0 0;box-shadow:var(--shadow-md);padding:var(--space-md);transform:translateX(24px) translateY(16px);">
+                        <div style="width:50%;height:16px;background:var(--surface-container);border-radius:var(--radius-full);margin-bottom:var(--space-sm);"></div>
+                        <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-lg);">
+                            <div style="width:33%;height:8px;background:var(--surface-container-high);border-radius:var(--radius-full);"></div>
+                            <div style="width:25%;height:8px;background:var(--surface-container-high);border-radius:var(--radius-full);"></div>
+                        </div>
+                        <div style="width:75%;height:12px;background:rgba(0,40,142,0.1);border-radius:var(--radius-full);margin-bottom:var(--space-sm);"></div>
+                        <div style="width:50%;height:12px;background:var(--surface-container-high);border-radius:var(--radius-full);"></div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: ATS Optimized -->
+                <div class="bento-item animate-on-scroll" style="grid-column:span 5;background:var(--surface-container-highest);border:1px solid rgba(196,197,213,0.2);border-radius:var(--radius-xl);">
+                    <div class="bento-icon" style="background:var(--secondary-container);">
+                        <span class="material-symbols-outlined" style="color:var(--secondary);">task_alt</span>
+                    </div>
+                    <h3 class="text-headline-md">ATS-Optimized</h3>
+                    <p class="text-body-md" style="color:var(--on-surface-variant);">
+                        Our templates are engineered to pass through Applicant Tracking Systems, ensuring your resume actually reaches recruiters' eyes.
+                    </p>
+                    <div style="margin-top:auto;padding-top:var(--space-lg);">
+                        <div style="display:flex;align-items:center;gap:var(--space-md);background:rgba(255,255,255,0.5);backdrop-filter:blur(8px);padding:var(--space-md);border-radius:var(--radius-md);">
+                            <div style="width:40px;height:40px;border-radius:var(--radius-full);background:rgba(22,163,74,0.2);display:flex;align-items:center;justify-content:center;">
+                                <span class="material-symbols-outlined" style="color:#16a34a;font-variation-settings:'FILL' 1;">check_circle</span>
+                            </div>
+                            <div>
+                                <div class="text-label-md">ATS Score: 98%</div>
+                                <div class="text-label-sm" style="color:var(--on-surface-variant);">Industry Leader</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Expert Phrases -->
+                <div class="bento-item animate-on-scroll" style="grid-column:span 5;background:var(--inverse-surface);color:var(--inverse-on-surface);border-radius:var(--radius-xl);">
+                    <div class="bento-icon" style="background:rgba(255,255,255,0.1);">
+                        <span class="material-symbols-outlined">forum</span>
+                    </div>
+                    <h3 class="text-headline-md">Expert Phrases</h3>
+                    <p class="text-body-md" style="opacity:0.8;margin-bottom:var(--space-xl);">
+                        Stuck on words? Access thousands of pre-written, impactful bullet points tailored to your specific industry and role.
+                    </p>
+                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+                        <div style="background:rgba(255,255,255,0.05);padding:var(--space-sm) var(--space-md);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.1);font-size:14px;">"Spearheaded a 40% increase in..."</div>
+                        <div style="background:rgba(255,255,255,0.05);padding:var(--space-sm) var(--space-md);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.1);font-size:14px;">"Developed and implemented a new..."</div>
+                    </div>
+                </div>
+
+                <!-- Feature 4: Cloud Sync -->
+                <div class="bento-item animate-on-scroll" style="grid-column:span 7;background:var(--surface-container);border-radius:var(--radius-xl);flex-direction:row;align-items:center;">
+                    <div style="flex:1;">
+                        <div class="bento-icon" style="background:rgba(0,40,142,0.1);margin-bottom:var(--space-md);">
+                            <span class="material-symbols-outlined" style="color:var(--primary);">cloud_done</span>
+                        </div>
+                        <h3 class="text-headline-md">Instant Export &amp; Cloud Sync</h3>
+                        <p class="text-body-md" style="color:var(--on-surface-variant);">
+                            Download as PDF instantly. Your work is automatically saved and synced across all your devices.
+                        </p>
+                    </div>
+                    <span class="material-symbols-outlined" style="font-size:80px;color:rgba(0,40,142,0.15);">devices</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="steps-section animate-on-scroll">
+        <div class="container">
+            <div style="text-align:center;margin-bottom:80px;">
+                <h2 class="text-headline-lg">Your 3-Step Path to a Better Job</h2>
+                <p class="text-body-md" style="color:var(--secondary);max-width:500px;margin:var(--space-md) auto 0;">Build a professional resume without the headache. It's faster and easier than you think.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="steps-connector" style="display:none;"></div>
+                <div class="step-item">
+                    <div class="step-circle">
+                        <span class="material-symbols-outlined" style="font-size:40px;color:var(--primary);">description</span>
+                    </div>
+                    <div>
+                        <h4 class="text-headline-sm" style="margin-bottom:var(--space-sm);">1. Choose a Template</h4>
+                        <p style="color:var(--on-surface-variant);">Select from our library of designer templates approved by HR managers.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">
+                        <span class="material-symbols-outlined" style="font-size:40px;color:var(--primary);">edit</span>
+                    </div>
+                    <div>
+                        <h4 class="text-headline-sm" style="margin-bottom:var(--space-sm);">2. Fill Your Details</h4>
+                        <p style="color:var(--on-surface-variant);">Our intuitive editor guides you through every section with helpful tips.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">
+                        <span class="material-symbols-outlined" style="font-size:40px;color:var(--primary);">download</span>
+                    </div>
+                    <div>
+                        <h4 class="text-headline-sm" style="margin-bottom:var(--space-sm);">3. Download &amp; Apply</h4>
+                        <p style="color:var(--on-surface-variant);">Export your resume in high resolution and land those interviews.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section animate-on-scroll">
+        <div class="cta-bg-icon">
+            <span class="material-symbols-outlined" style="font-size:400px;transform:rotate(-12deg) translateX(40px);">article</span>
+        </div>
+        <div class="container" style="text-align:center;position:relative;z-index:1;">
+            <h2 class="text-display" style="margin-bottom:var(--space-lg);">Ready to make your next big move?</h2>
+            <p class="text-body-lg" style="opacity:0.8;max-width:600px;margin:0 auto var(--space-xl);">Join thousands of job seekers who secured their dream roles at top tech companies using ResumeCraft.</p>
+            <div style="display:flex;justify-content:center;gap:var(--space-md);flex-wrap:wrap;">
+                <a href="{{ url_for('register') }}" class="btn btn-lg" style="background:white;color:var(--primary);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);">
+                    Create My Resume Now
+                </a>
+                <a href="#features" class="btn btn-lg" style="background:transparent;color:white;border:1px solid rgba(255,255,255,0.3);border-radius:var(--radius-md);">
+                    Browse Templates
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div>
+            <span class="text-label-md font-bold" style="color:var(--on-surface);">ResumeCraft</span>
+            <p class="text-body-sm" style="color:var(--secondary);">© 2024 ResumeCraft. Built for professionals.</p>
+        </div>
+        <div class="footer-links">
+            <a class="footer-link" href="#">Privacy Policy</a>
+            <a class="footer-link" href="#">Terms of Service</a>
+            <a class="footer-link" href="#">Support</a>
+        </div>
+    </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,310 @@
+{% set pd = resume.personal_details %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ pd.full_name if pd else 'Resume' }} — Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        .no-print { display: flex; }
+        @media print {
+            .no-print { display: none !important; }
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #131b2e;
+            line-height: 1.5;
+            background: white;
+        }
+
+        .resume {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 48px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #1e40af;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .photo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #c4c5d5;
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 700;
+            color: #00288e;
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+
+        .title {
+            font-size: 15px;
+            color: #505f76;
+            font-weight: 500;
+        }
+
+        .contact {
+            text-align: right;
+            font-size: 11px;
+            color: #444653;
+            line-height: 1.8;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #00288e;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #e2e7ff;
+            padding-bottom: 4px;
+        }
+
+        .entry {
+            margin-bottom: 12px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 3px;
+        }
+
+        .entry-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #131b2e;
+        }
+
+        .entry-date {
+            font-size: 11px;
+            color: #757684;
+            font-style: italic;
+            white-space: nowrap;
+        }
+
+        .entry-subtitle {
+            font-size: 12px;
+            color: #505f76;
+            margin-bottom: 3px;
+        }
+
+        .entry-desc {
+            font-size: 12px;
+            color: #444653;
+            line-height: 1.6;
+        }
+
+        /* Skills */
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .skill-chip {
+            background: #eaedff;
+            color: #00288e;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Two-column layout */
+        .two-col {
+            display: flex;
+            gap: 32px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .link {
+            font-size: 11px;
+            color: #1e40af;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top helper bar, hidden in PDF/print -->
+    <div class="no-print" style="background:#f8fafc; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; font-family:'Inter',sans-serif; box-sizing:border-box; width:100%;">
+        <a href="javascript:window.history.back();" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:#1e40af; font-weight:600; font-size:14px;">
+            <span style="font-size:18px;">←</span> Back to Editor
+        </a>
+        <span style="font-size:13px; color:#475569; font-weight:500; display:flex; align-items:center; gap:6px;">
+            <span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%; animation: pulse 1.5s infinite;"></span>
+            A4 PDF is generating. It will download automatically to your system.
+        </span>
+        <button onclick="window.print();" style="background:#1e40af; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            Print / Save Manually
+        </button>
+    </div>
+    
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+    </style>
+
+    <div class="resume">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                {% if pd and pd.photo_path %}
+                <img src="{{ pd.photo_path }}" class="photo" alt="Photo">
+                {% endif %}
+                <div>
+                    <h1 class="name">{{ pd.full_name if pd else 'Your Name' }}</h1>
+                    <p class="title">{{ pd.job_title if pd else 'Job Title' }}</p>
+                </div>
+            </div>
+            <div class="contact">
+                {% if pd %}
+                {% if pd.email %}<p>{{ pd.email }}</p>{% endif %}
+                {% if pd.phone %}<p>{{ pd.phone }}</p>{% endif %}
+                {% if pd.address %}<p>{{ pd.address }}</p>{% endif %}
+                {% if pd.linkedin %}<p>{{ pd.linkedin }}</p>{% endif %}
+                {% if pd.github %}<p>{{ pd.github }}</p>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Professional Summary -->
+        {% if pd and pd.profile_summary %}
+        <div class="section">
+            <h2 class="section-title">Professional Summary</h2>
+            <p class="entry-desc">{{ pd.profile_summary }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Work Experience -->
+        {% if resume.work_experience %}
+        <div class="section">
+            <h2 class="section-title">Work Experience</h2>
+            {% for exp in resume.work_experience %}
+            <div class="entry">
+                <div class="entry-header">
+                    <span class="entry-title">{{ exp.job_title }}{% if exp.company %} — {{ exp.company }}{% endif %}</span>
+                    <span class="entry-date">{{ exp.start_date }}{% if exp.end_date %} – {{ exp.end_date }}{% else %} – Present{% endif %}</span>
+                </div>
+                {% if exp.description %}
+                <p class="entry-desc">{{ exp.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="two-col">
+            <!-- Education -->
+            {% if resume.education %}
+            <div class="col">
+                <div class="section">
+                    <h2 class="section-title">Education</h2>
+                    {% for edu in resume.education %}
+                    <div class="entry">
+                        <p class="entry-title">{{ edu.degree }}</p>
+                        <p class="entry-subtitle">{{ edu.institution }}{% if edu.year %} • {{ edu.year }}{% endif %}{% if edu.percentage %} • {{ edu.percentage }}{% endif %}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Skills -->
+            {% if resume.skills %}
+            <div class="col">
+                <div class="section">
+                    <h2 class="section-title">Skills</h2>
+                    <div class="skills-list">
+                        {% for skill in resume.skills %}
+                        <span class="skill-chip">{{ skill.skill_name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Projects -->
+        {% if resume.projects %}
+        <div class="section">
+            <h2 class="section-title">Projects</h2>
+            {% for proj in resume.projects %}
+            <div class="entry">
+                <div class="entry-header">
+                    <span class="entry-title">{{ proj.name }}</span>
+                    {% if proj.tech_stack %}<span class="entry-date">{{ proj.tech_stack }}</span>{% endif %}
+                </div>
+                {% if proj.description %}
+                <p class="entry-desc">{{ proj.description }}</p>
+                {% endif %}
+                {% if proj.live_link %}
+                <a href="{{ proj.live_link }}" class="link">{{ proj.live_link }}</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Client-side PDF fallback compiler -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const element = document.querySelector('.resume');
+            if (!element) return;
+
+            const opt = {
+                margin:       10,
+                filename:     "{{ pd.full_name.replace(' ', '_') if pd and pd.full_name else 'resume' }}_resume.pdf",
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Compile & Download directly to Downloads folder
+            html2pdf().set(opt).from(element).save().then(() => {
+                console.log("PDF generated successfully.");
+            });
+        });
+    </script>
+</body>
+</html>

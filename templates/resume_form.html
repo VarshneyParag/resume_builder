@@ -1,0 +1,607 @@
+{% extends "base.html" %}
+{% block title %}{{ resume.title or 'New Resume' }} — ResumeCraft Editor{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { overflow: hidden; height: 100vh; display: flex; }
+</style>
+{% endblock %}
+
+{% block body %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+            <span class="material-symbols-outlined">edit_note</span>
+        </div>
+        <div class="sidebar-brand-text">
+            <h1>ResumeCraft</h1>
+            <p>Professional Suite</p>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-link active">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">edit_note</span>
+            <span>Editor</span>
+        </a>
+        <a href="{{ url_for('settings') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">settings</span>
+            <span>Settings</span>
+        </a>
+        <div style="margin-top:var(--space-xl);padding:0 var(--space-sm);">
+            <a href="{{ url_for('create_resume') }}" class="btn btn-primary" style="width:100%;padding:var(--space-md);border-radius:var(--radius-md);">
+                + New Resume
+            </a>
+        </div>
+    </nav>
+    <div style="margin-top:auto;padding:0 var(--space-sm);">
+        <a href="#" class="sidebar-link" id="help-sidebar-btn">
+            <span class="material-symbols-outlined">help</span>
+            <span>Help</span>
+        </a>
+        <a href="{{ url_for('logout') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">logout</span>
+            <span>Sign Out</span>
+        </a>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main style="margin-left:256px;display:flex;flex-direction:column;width:100%;height:100vh;">
+    <!-- Editor Header -->
+    <header style="height:64px;display:flex;justify-content:space-between;align-items:center;padding:0 var(--space-lg);background:var(--surface);box-shadow:var(--shadow-sm);z-index:40;flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:var(--space-md);">
+            <input type="text" form="resume-form" name="title" value="{{ resume.title }}" class="text-headline-sm font-bold text-primary" style="background:none;border:none;outline:none;font-family:'Inter',sans-serif;width:300px;" placeholder="Resume Title">
+            <div style="display:flex;align-items:center;gap:4px;color:var(--on-surface-variant);font-size:14px;background:var(--surface-container);padding:4px var(--space-sm);border-radius:var(--radius-full);">
+                <span style="width:8px;height:8px;border-radius:var(--radius-full);background:var(--primary);"></span>
+                <span id="autosave-status">Autosaved</span>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-sm);">
+            <button type="submit" form="resume-form" class="btn btn-ghost">
+                <span class="material-symbols-outlined">save</span>
+                Save
+            </button>
+            <button type="button" id="editor-download-pdf-btn" class="btn btn-primary" style="border-radius:var(--radius);">
+                <span class="material-symbols-outlined">download</span>
+                Download PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- Editor Split Screen -->
+    <div class="editor-layout">
+        <!-- Form Side -->
+        <section class="editor-form no-scrollbar">
+            <!-- Progress Stepper -->
+            <div class="stepper">
+                <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-sm);">
+                    <span class="text-label-md text-primary" id="step-label">Step 1: Basics</span>
+                    <span class="text-label-md" style="color:var(--on-surface-variant);" id="step-percent">20% Complete</span>
+                </div>
+                <div class="stepper-progress">
+                    <div class="stepper-progress-fill" style="width:20%;"></div>
+                </div>
+                <div class="stepper-tabs">
+                    <button class="stepper-tab active" type="button">Basics</button>
+                    <button class="stepper-tab" type="button">Experience</button>
+                    <button class="stepper-tab" type="button">Education</button>
+                    <button class="stepper-tab" type="button">Skills</button>
+                    <button class="stepper-tab" type="button">Projects</button>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <form id="resume-form" method="POST" action="{{ url_for('update_resume', resume_id=resume.id) }}" enctype="multipart/form-data" data-resume-id="{{ resume.id }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="editor-form-content">
+
+                    <!-- SECTION 1: Basics -->
+                    <div class="form-section">
+                        <!-- Personal Details -->
+                        <div class="section-card">
+                            <div class="section-card-header">
+                                <span class="material-symbols-outlined">person</span>
+                                <h3 class="text-headline-sm">Personal Details</h3>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="full_name" class="form-input" placeholder="e.g. Parag Sharma" value="{{ pd.full_name if pd else '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Job Title</label>
+                                    <input type="text" name="job_title" class="form-input" placeholder="e.g. Python Developer" value="{{ pd.job_title if pd else '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" name="email" class="form-input" placeholder="your@email.com" value="{{ pd.email if pd else '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-input" placeholder="+91 9876543210" value="{{ pd.phone if pd else '' }}">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" name="address" class="form-input" placeholder="City, State, Country" value="{{ pd.address if pd else '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">LinkedIn</label>
+                                    <input type="url" name="linkedin" class="form-input" placeholder="https://linkedin.com/in/yourname" value="{{ pd.linkedin if pd else '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">GitHub</label>
+                                    <input type="url" name="github" class="form-input" placeholder="https://github.com/yourname" value="{{ pd.github if pd else '' }}">
+                                </div>
+                            </div>
+
+                            <!-- Photo Upload -->
+                            <div style="margin-top:var(--space-lg);">
+                                <label class="form-label" style="margin-bottom:var(--space-sm);display:block;">Profile Photo</label>
+                                <div class="photo-upload">
+                                    <div class="photo-preview" id="photo-preview-container">
+                                        {% if pd and pd.photo_path %}
+                                        <img src="{{ url_for('static', filename='../' + pd.photo_path) }}" id="photo-preview-img" alt="Photo">
+                                        {% else %}
+                                        <span class="material-symbols-outlined" style="font-size:40px;color:var(--outline-variant);" id="photo-placeholder">person</span>
+                                        <img src="" id="photo-preview-img" alt="Photo" style="display:none;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="photo-upload-actions">
+                                        <label class="btn btn-secondary" style="cursor:pointer;">
+                                            <span class="material-symbols-outlined" style="font-size:18px;">upload</span>
+                                            Upload Photo
+                                            <input type="file" name="photo" id="photo-input" accept="image/*" style="display:none;">
+                                        </label>
+                                        <button type="button" id="photo-remove" class="btn btn-danger" style="font-size:12px;">
+                                            Remove
+                                        </button>
+                                        <span class="form-hint">JPG, PNG, max 5MB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Professional Summary -->
+                        <div class="section-card">
+                            <div class="section-card-header" style="justify-content:space-between;">
+                                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                                    <span class="material-symbols-outlined">description</span>
+                                    <h3 class="text-headline-sm">Professional Summary</h3>
+                                </div>
+                                <button type="button" class="btn btn-ghost open-ai-writer" data-section="summary" style="font-size:13px;">
+                                    <span class="material-symbols-outlined" style="font-size:16px;">auto_awesome</span>
+                                    AI Writer
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Summary</label>
+                                <textarea name="profile_summary" class="form-textarea" rows="6" placeholder="Write a brief professional overview about yourself...">{{ pd.profile_summary if pd else '' }}</textarea>
+                                <span class="form-hint">Include keywords from the job description for better ATS scoring.</span>
+                            </div>
+                        </div>
+
+                        <!-- Step Navigation -->
+                        <div style="display:flex;justify-content:flex-end;padding:var(--space-lg) 0;border-top:1px solid var(--outline-variant);margin-top:var(--space-lg);">
+                            <button type="button" class="btn btn-primary btn-next-step">
+                                Continue to Experience
+                                <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: Experience -->
+                    <div class="form-section hidden">
+                        <div class="section-card">
+                            <div class="section-card-header">
+                                <span class="material-symbols-outlined">work</span>
+                                <h3 class="text-headline-sm">Work Experience</h3>
+                            </div>
+                            <div id="experience-list" style="display:flex;flex-direction:column;gap:var(--space-md);">
+                                {% if resume.work_experience %}
+                                {% for exp in resume.work_experience %}
+                                <div class="dynamic-entry">
+                                    <button type="button" class="btn-remove" title="Remove">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                    <div class="dynamic-entry-header">
+                                        <span class="text-label-md" style="color:var(--primary);">Experience <span class="entry-index">#{{ loop.index }}</span></span>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Job Title</label>
+                                            <input type="text" name="experience[{{ loop.index0 }}][job_title]" class="form-input" value="{{ exp.job_title }}" placeholder="e.g. Python Developer">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Company</label>
+                                            <input type="text" name="experience[{{ loop.index0 }}][company]" class="form-input" value="{{ exp.company }}" placeholder="Company name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Start Date</label>
+                                            <input type="text" name="experience[{{ loop.index0 }}][start_date]" class="form-input" value="{{ exp.start_date }}" placeholder="e.g. Jan 2022">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">End Date</label>
+                                            <input type="text" name="experience[{{ loop.index0 }}][end_date]" class="form-input" value="{{ exp.end_date }}" placeholder="e.g. Present">
+                                        </div>
+                                        <div class="form-group col-span-2">
+                                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-xs);">
+                                                <label class="form-label" style="margin-bottom:0;">Description</label>
+                                                <button type="button" class="btn btn-ghost open-ai-writer" data-section="experience" style="font-size:11px;padding:2px 8px;height:auto;">
+                                                    <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
+                                                    AI Bullet Points
+                                                </button>
+                                            </div>
+                                            <textarea name="experience[{{ loop.index0 }}][description]" class="form-textarea" rows="3" placeholder="Describe your responsibilities...">{{ exp.description }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <button type="button" id="add-experience" class="btn-add-entry" style="margin-top:var(--space-md);">
+                                <span class="material-symbols-outlined">add</span>
+                                Add Experience
+                            </button>
+                        </div>
+
+                        <div style="display:flex;justify-content:space-between;padding:var(--space-lg) 0;border-top:1px solid var(--outline-variant);margin-top:var(--space-lg);">
+                            <button type="button" class="btn btn-secondary btn-prev-step">Back</button>
+                            <button type="button" class="btn btn-primary btn-next-step">Continue to Education <span class="material-symbols-outlined">arrow_forward</span></button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: Education -->
+                    <div class="form-section hidden">
+                        <div class="section-card">
+                            <div class="section-card-header">
+                                <span class="material-symbols-outlined">school</span>
+                                <h3 class="text-headline-sm">Education</h3>
+                            </div>
+                            <div id="education-list" style="display:flex;flex-direction:column;gap:var(--space-md);">
+                                {% if resume.education %}
+                                {% for edu in resume.education %}
+                                <div class="dynamic-entry">
+                                    <button type="button" class="btn-remove" title="Remove">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                    <div class="dynamic-entry-header">
+                                        <span class="text-label-md" style="color:var(--primary);">Education <span class="entry-index">#{{ loop.index }}</span></span>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Degree</label>
+                                            <input type="text" name="education[{{ loop.index0 }}][degree]" class="form-input" value="{{ edu.degree }}" placeholder="e.g. B.Tech in CSE">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Institution</label>
+                                            <input type="text" name="education[{{ loop.index0 }}][institution]" class="form-input" value="{{ edu.institution }}" placeholder="University name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Year</label>
+                                            <input type="text" name="education[{{ loop.index0 }}][year]" class="form-input" value="{{ edu.year }}" placeholder="e.g. 2020-2024">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Percentage / CGPA</label>
+                                            <input type="text" name="education[{{ loop.index0 }}][percentage]" class="form-input" value="{{ edu.percentage }}" placeholder="e.g. 8.5 CGPA">
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <button type="button" id="add-education" class="btn-add-entry" style="margin-top:var(--space-md);">
+                                <span class="material-symbols-outlined">add</span>
+                                Add Education
+                            </button>
+                        </div>
+
+                        <div style="display:flex;justify-content:space-between;padding:var(--space-lg) 0;border-top:1px solid var(--outline-variant);margin-top:var(--space-lg);">
+                            <button type="button" class="btn btn-secondary btn-prev-step">Back</button>
+                            <button type="button" class="btn btn-primary btn-next-step">Continue to Skills <span class="material-symbols-outlined">arrow_forward</span></button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: Skills -->
+                    <div class="form-section hidden">
+                        <div class="section-card">
+                            <div class="section-card-header">
+                                <span class="material-symbols-outlined">psychology</span>
+                                <h3 class="text-headline-sm">Skills</h3>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Add your skills (press Enter to add)</label>
+                                <div class="skills-container" id="skills-container">
+                                    {% if resume.skills %}
+                                    {% for skill in resume.skills %}
+                                    <span class="skill-tag">{{ skill.skill_name }}<button type="button" class="skill-tag-remove" title="Remove">×</button></span>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <input type="text" id="skill-input" class="skill-input" placeholder="Type a skill & press Enter...">
+                                </div>
+                                <input type="hidden" name="skills" id="skills-hidden" value="{{ resume.skills|map(attribute='skill_name')|join(',') if resume.skills else '' }}">
+                                <span class="form-hint">Suggested: Python, Django, Flask, REST API, PostgreSQL, Docker, Git</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;justify-content:space-between;padding:var(--space-lg) 0;border-top:1px solid var(--outline-variant);margin-top:var(--space-lg);">
+                            <button type="button" class="btn btn-secondary btn-prev-step">Back</button>
+                            <button type="button" class="btn btn-primary btn-next-step">Continue to Projects <span class="material-symbols-outlined">arrow_forward</span></button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 5: Projects -->
+                    <div class="form-section hidden">
+                        <div class="section-card">
+                            <div class="section-card-header">
+                                <span class="material-symbols-outlined">code</span>
+                                <h3 class="text-headline-sm">Projects</h3>
+                            </div>
+                            <div id="projects-list" style="display:flex;flex-direction:column;gap:var(--space-md);">
+                                {% if resume.projects %}
+                                {% for proj in resume.projects %}
+                                <div class="dynamic-entry">
+                                    <button type="button" class="btn-remove" title="Remove">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                    <div class="dynamic-entry-header">
+                                        <span class="text-label-md" style="color:var(--primary);">Project <span class="entry-index">#{{ loop.index }}</span></span>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Project Name</label>
+                                            <input type="text" name="projects[{{ loop.index0 }}][name]" class="form-input" value="{{ proj.name }}" placeholder="e.g. E-Commerce Platform">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Tech Stack</label>
+                                            <input type="text" name="projects[{{ loop.index0 }}][tech_stack]" class="form-input" value="{{ proj.tech_stack }}" placeholder="e.g. Python, Django, React">
+                                        </div>
+                                        <div class="form-group col-span-2">
+                                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-xs);">
+                                                <label class="form-label" style="margin-bottom:0;">Description</label>
+                                                <button type="button" class="btn btn-ghost open-ai-writer" data-section="project" style="font-size:11px;padding:2px 8px;height:auto;">
+                                                    <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
+                                                    AI Writer
+                                                </button>
+                                            </div>
+                                            <textarea name="projects[{{ loop.index0 }}][description]" class="form-textarea" rows="3" placeholder="Describe the project...">{{ proj.description }}</textarea>
+                                        </div>
+                                        <div class="form-group col-span-2">
+                                            <label class="form-label">Live Link</label>
+                                            <input type="url" name="projects[{{ loop.index0 }}][live_link]" class="form-input" value="{{ proj.live_link }}" placeholder="https://...">
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <button type="button" id="add-project" class="btn-add-entry" style="margin-top:var(--space-md);">
+                                <span class="material-symbols-outlined">add</span>
+                                Add Project
+                            </button>
+                        </div>
+
+                        <div style="display:flex;justify-content:space-between;padding:var(--space-lg) 0;border-top:1px solid var(--outline-variant);margin-top:var(--space-lg);">
+                            <button type="button" class="btn btn-secondary btn-prev-step">Back</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-symbols-outlined">save</span>
+                                Save Resume
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </section>
+
+        <!-- Preview Side -->
+        <section class="editor-preview no-scrollbar">
+            <div style="position:sticky;top:var(--space-md);">
+                <div class="resume-page" style="transform:scale(0.75);">
+                    <!-- Resume Preview Content -->
+                    <div class="resume-page-header">
+                        <div>
+                            <h1 class="text-headline-lg text-primary" style="letter-spacing:-0.02em;" id="preview-name">{{ pd.full_name if pd else 'Your Name' }}</h1>
+                            <p class="text-headline-sm" style="color:var(--secondary);" id="preview-title">{{ pd.job_title if pd else 'Job Title' }}</p>
+                        </div>
+                        <div style="text-align:right;font-size:13px;color:var(--on-surface-variant);line-height:1.8;">
+                            <p id="preview-address">{{ pd.address if pd else 'City, Country' }}</p>
+                            <p id="preview-email">{{ pd.email if pd else 'email@example.com' }}</p>
+                            <p id="preview-phone">{{ pd.phone if pd else '+91 9876543210' }}</p>
+                            <p id="preview-linkedin" style="{{ 'display:block' if pd and pd.linkedin else 'display:none' }}">{{ pd.linkedin if pd else '' }}</p>
+                            <p id="preview-github" style="{{ 'display:block' if pd and pd.github else 'display:none' }}">{{ pd.github if pd else '' }}</p>
+                        </div>
+                    </div>
+
+                    <div style="height:1px;background:var(--outline-variant);width:100%;margin-bottom:var(--space-lg);"></div>
+
+                    <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+                        <!-- Summary -->
+                        <div>
+                            <h4 class="resume-section-title">Professional Summary</h4>
+                            <p style="font-size:13px;line-height:1.6;color:var(--on-surface);" id="preview-summary">{{ pd.profile_summary if pd else 'Your professional summary will appear here...' }}</p>
+                        </div>
+
+                        <!-- Experience -->
+                        <div>
+                            <h4 class="resume-section-title">Work Experience</h4>
+                            <div id="preview-experience">
+                                {% if resume.work_experience %}
+                                {% for exp in resume.work_experience %}
+                                <div style="margin-bottom:10px;">
+                                    <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+                                        <span style="font-size:12px;font-weight:600;">{{ exp.job_title }} • {{ exp.company }}</span>
+                                        <span style="font-size:11px;color:var(--on-surface-variant);font-style:italic;">{{ exp.start_date }} - {{ exp.end_date or 'Present' }}</span>
+                                    </div>
+                                    <p style="font-size:11px;color:var(--on-surface-variant);line-height:1.5;">{{ exp.description[:150] }}{{ '...' if exp.description|length > 150 else '' }}</p>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <p style="color:var(--outline-variant);font-size:12px;">Add work experience</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Two-column: Skills & Education -->
+                        <div style="display:flex;gap:var(--space-xl);">
+                            <div style="flex:1;">
+                                <h4 class="resume-section-title">Skills</h4>
+                                <div id="preview-skills" style="display:flex;flex-wrap:wrap;gap:4px;">
+                                    {% if resume.skills %}
+                                    {% for skill in resume.skills %}
+                                    <span class="pdf-skill-chip">{{ skill.skill_name }}</span>
+                                    {% endfor %}
+                                    {% else %}
+                                    <span style="color:var(--outline-variant);font-size:12px;">Add skills to see them here</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div style="flex:1;">
+                                <h4 class="resume-section-title">Education</h4>
+                                <div id="preview-education">
+                                    {% if resume.education %}
+                                    {% for edu in resume.education %}
+                                    <div style="margin-bottom:8px;">
+                                        <div style="font-size:12px;font-weight:600;">{{ edu.degree }}</div>
+                                        <div style="font-size:11px;color:var(--on-surface-variant);">{{ edu.institution }}{{ ' • ' + edu.year if edu.year else '' }}</div>
+                                    </div>
+                                    {% endfor %}
+                                    {% else %}
+                                    <p style="color:var(--outline-variant);font-size:12px;">Add education entries</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Projects -->
+                        <div>
+                            <h4 class="resume-section-title">Projects</h4>
+                            <div id="preview-projects">
+                                {% if resume.projects %}
+                                {% for proj in resume.projects %}
+                                <div style="margin-bottom:8px;">
+                                    <div style="font-size:12px;font-weight:600;">{{ proj.name }}</div>
+                                    {% if proj.tech_stack %}<div style="font-size:10px;color:var(--primary);margin-bottom:2px;">{{ proj.tech_stack }}</div>{% endif %}
+                                    <p style="font-size:11px;color:var(--on-surface-variant);line-height:1.4;">{{ proj.description[:100] }}{{ '...' if proj.description|length > 100 else '' }}</p>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <p style="color:var(--outline-variant);font-size:12px;">Add projects</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Toolbar (appears on hover) -->
+                    <div style="position:absolute;bottom:var(--space-md);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) var(--space-lg);background:var(--inverse-surface);color:var(--inverse-on-surface);border-radius:var(--radius-full);box-shadow:var(--shadow-lg);opacity:0;transition:opacity 0.3s;">
+                        <span class="material-symbols-outlined" style="cursor:pointer;font-size:20px;">zoom_in</span>
+                        <div style="width:1px;height:16px;background:var(--outline);"></div>
+                        <span style="font-size:13px;">75%</span>
+                        <div style="width:1px;height:16px;background:var(--outline);"></div>
+                        <span class="material-symbols-outlined" style="cursor:pointer;font-size:20px;">zoom_out</span>
+                        <span class="material-symbols-outlined" style="cursor:pointer;font-size:20px;margin-left:var(--space-md);">fullscreen</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- AI Resume Writer Modal -->
+<div id="ai-writer-overlay-modal" class="custom-modal-overlay">
+    <div class="custom-modal" style="max-width: 600px;">
+        <div class="custom-modal-header">
+            <h3>
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;color:var(--primary);">auto_awesome</span>
+                ResumeCraft AI Writer
+            </h3>
+            <button class="custom-modal-close" id="ai-writer-modal-close">×</button>
+        </div>
+        <div class="custom-modal-body">
+            <p class="text-body-sm" style="color:var(--on-surface-variant);">Tell AI about your role and let it draft clean, high-impact statements optimized for ATS screening.</p>
+            
+            <input type="hidden" id="ai-target-field-index" value="">
+            
+            <div class="form-group">
+                <label class="form-label">Target Section</label>
+                <select id="ai-section-select" class="form-input" style="background-color: var(--surface-container-low);">
+                    <option value="summary">Professional Summary</option>
+                    <option value="experience">Work Experience Bullet Points</option>
+                    <option value="project">Project Description</option>
+                </select>
+            </div>
+            
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                <div class="form-group">
+                    <label class="form-label">Job Title / Role</label>
+                    <input type="text" id="ai-role-input" class="form-input" placeholder="e.g. Backend Developer">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Keywords / Tech Stack</label>
+                    <input type="text" id="ai-keywords-input" class="form-input" placeholder="e.g. Python, SQL (comma separated)">
+                </div>
+            </div>
+            
+            <div class="ai-output-container">
+                <div class="ai-loader" id="ai-writer-loader">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div id="ai-writer-result-text" style="color:var(--outline-variant); font-style: italic; white-space: pre-wrap;">
+                    AI generated suggestions will appear here...
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn btn-secondary" id="ai-writer-generate-btn">
+                <span class="material-symbols-outlined" style="font-size:16px;">auto_awesome</span>
+                Generate
+            </button>
+            <button class="btn btn-primary" id="ai-writer-insert-btn" disabled>
+                <span class="material-symbols-outlined" style="font-size:16px;">input</span>
+                Insert Content
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Help Overlay Modal -->
+<div id="help-overlay-modal" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h3>
+                <span class="material-symbols-outlined">help</span>
+                ResumeCraft Support Center
+            </h3>
+            <button class="custom-modal-close" id="help-modal-close">×</button>
+        </div>
+        <div class="custom-modal-body">
+            <h4 style="font-weight:700;color:var(--primary);">Frequently Asked Questions</h4>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div>
+                    <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">How does the AI Resume Writer work?</h5>
+                    <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">When editing a resume, click the **AI Writer** button next to Summary or Experience. Enter your job role and keywords, then click Generate. The AI will draft high-impact statements that you can instantly insert into your fields.</p>
+                </div>
+                <div style="height:1px;background:var(--outline-variant);"></div>
+                <div>
+                    <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">How do I download a PDF of my resume?</h5>
+                    <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">Simply click on the **Download PDF** button in the header of the resume editor. The PDF will be created dynamically and saved in your computer's Downloads folder.</p>
+                </div>
+                <div style="height:1px;background:var(--outline-variant);"></div>
+                <div>
+                    <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">What is Profile Completeness?</h5>
+                    <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">Profile Completeness measures how comprehensive your default resume is. Complete all five steps (Basics, Work History, Education, Skills, and Projects) to achieve a 100% score and ensure your resume is fully optimized for ATS filters.</p>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn btn-primary" id="help-modal-ok">Got it</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

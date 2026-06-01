@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% block title %}My Resumes — ResumeCraft{% endblock %}
+
+{% block body %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">description</span>
+        </div>
+        <div class="sidebar-brand-text">
+            <h1>ResumeCraft</h1>
+            <p>Professional Suite</p>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="sidebar-link active">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">edit_note</span>
+            Resumes
+        </a>
+        <a href="{{ url_for('settings') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+
+    <div class="sidebar-cta">
+        <a href="{{ url_for('create_resume') }}" class="btn btn-primary" style="width:100%;border-radius:var(--radius-md);padding:var(--space-md);">
+            <span class="material-symbols-outlined">add</span>
+            New Resume
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <a href="#" class="sidebar-link" id="help-sidebar-btn">
+            <span class="material-symbols-outlined">help</span>
+            Help
+        </a>
+        <a href="{{ url_for('logout') }}" class="sidebar-link">
+            <span class="material-symbols-outlined">logout</span>
+            Sign Out
+        </a>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-with-sidebar">
+    <!-- Header -->
+    <header class="page-header">
+        <div>
+            <h2>My Resumes</h2>
+            <p class="text-body-md" style="color:var(--on-surface-variant);">Manage and optimize your professional profiles.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-md);position:relative;">
+            <div style="position:relative;">
+                <span class="material-symbols-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--outline);">search</span>
+                <input type="text" id="dashboard-search" placeholder="Search resumes..." class="form-input" style="padding-left:40px;width:256px;font-size:14px;">
+            </div>
+            <button class="btn-icon" id="header-notif-btn" style="position:relative;">
+                <span class="material-symbols-outlined">notifications</span>
+                <span style="position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--error);border-radius:var(--radius-full);"></span>
+            </button>
+            <div id="header-notif-dropdown" class="custom-dropdown-menu">
+                <div class="dropdown-header">Recent Notifications</div>
+                <div class="dropdown-item">
+                    <span class="material-symbols-outlined" style="color:var(--primary);">check_circle</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">AI Writer Activated</div>
+                        <div style="font-size:11px;color:var(--on-surface-variant);">Ready to write your resume summary.</div>
+                    </div>
+                </div>
+                <div class="dropdown-item">
+                    <span class="material-symbols-outlined" style="color:var(--secondary);">info</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Welcome to ResumeCraft!</div>
+                        <div style="font-size:11px;color:var(--on-surface-variant);">Start crafting your stellar resume now.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="header-profile-btn" style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--secondary-container);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--outline-variant);cursor:pointer;">
+                <span class="material-symbols-outlined" style="color:var(--secondary);">person</span>
+            </div>
+            <div id="header-profile-dropdown" class="custom-dropdown-menu">
+                <div class="dropdown-header" style="border-bottom:none;padding-bottom:2px;">{{ current_user.name }}</div>
+                <div style="font-size:12px;color:var(--on-surface-variant);padding:0 var(--space-lg) var(--space-sm);border-bottom:1px solid var(--outline-variant);">{{ current_user.email }}</div>
+                <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('settings') }}" class="dropdown-item">
+                    <span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+                <a href="{{ url_for('logout') }}" class="dropdown-item" style="color:var(--error);border-top:1px solid var(--outline-variant);">
+                    <span class="material-symbols-outlined" style="color:var(--error);">logout</span>
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Resume Cards Grid -->
+    <div class="resume-grid">
+        {% for resume in resumes %}
+        <div class="card resume-card-item">
+            <div class="resume-card-preview">
+                <div class="resume-card-preview-inner" style="transform:rotate({{ loop.cycle('1', '-1', '2') }}deg);">
+                    <div style="width:50%;height:16px;background:rgba(30,64,175,0.1);margin-bottom:8px;border-radius:2px;"></div>
+                    <div style="width:100%;height:8px;background:rgba(196,197,213,0.3);margin-bottom:4px;border-radius:2px;"></div>
+                    <div style="width:75%;height:8px;background:rgba(196,197,213,0.3);margin-bottom:16px;border-radius:2px;"></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="width:100%;height:4px;background:rgba(196,197,213,0.2);border-radius:2px;"></div>
+                        <div style="width:100%;height:4px;background:rgba(196,197,213,0.2);border-radius:2px;"></div>
+                        <div style="width:83%;height:4px;background:rgba(196,197,213,0.2);border-radius:2px;"></div>
+                    </div>
+                </div>
+                {% if resume.is_default %}
+                <div class="resume-card-badge">Default</div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h3 class="text-headline-sm">{{ resume.title }}</h3>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);display:flex;align-items:center;gap:4px;margin-top:4px;">
+                    <span class="material-symbols-outlined" style="font-size:16px;">update</span>
+                    Last edited: {{ resume.updated_at.strftime('%b %d, %Y') if resume.updated_at else 'Just now' }}
+                </p>
+            </div>
+            <div class="card-footer">
+                <div style="display:flex;gap:4px;">
+                    <a href="{{ url_for('edit_resume', resume_id=resume.id) }}" class="btn-icon" style="background:rgba(30,64,175,0.05);color:var(--primary);" title="Edit">
+                        <span class="material-symbols-outlined">edit</span>
+                    </a>
+                    <a href="{{ url_for('preview_resume', resume_id=resume.id) }}" class="btn-icon" title="Preview">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </a>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-sm);">
+                    {% if not resume.is_default %}
+                    <button onclick="setDefaultResume({{ resume.id }})" class="text-label-sm" style="color:var(--on-surface-variant);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:var(--radius);" title="Set as Default">
+                        Set Default
+                    </button>
+                    {% endif %}
+                    <button onclick="confirmDelete({{ resume.id }})" class="btn-icon" style="color:var(--error);" title="Delete">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Add New Card -->
+        <a href="{{ url_for('create_resume') }}" class="add-card">
+            <div class="add-card-icon">
+                <span class="material-symbols-outlined" style="font-size:32px;">add_circle</span>
+            </div>
+            <h3 class="text-headline-sm">Create New Resume</h3>
+            <p class="text-body-sm" style="color:var(--on-surface-variant);text-align:center;max-width:200px;">Start building your next professional opportunity from scratch.</p>
+        </a>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stats-card">
+            <div style="display:flex;align-items:center;gap:var(--space-lg);">
+                <div style="width:48px;height:48px;background:white;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);">
+                    <span class="material-symbols-outlined text-primary">trending_up</span>
+                </div>
+                <div>
+                    <h4 class="text-label-md" style="text-transform:uppercase;letter-spacing:0.1em;opacity:0.6;">Profile Completeness</h4>
+                    <div style="display:flex;align-items:center;gap:var(--space-sm);margin-top:4px;">
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width:{{ completeness }}%;"></div>
+                        </div>
+                        <span class="font-bold text-primary">{{ completeness }}%</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-ghost text-label-md" id="view-tips-btn" style="display:flex;align-items:center;gap:4px;">
+                View Optimization Tips
+                <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+            </button>
+        </div>
+        <div class="pro-card">
+            <span class="material-symbols-outlined pro-card-bg" style="font-variation-settings:'FILL' 1;">workspace_premium</span>
+            <div>
+                <h4 class="text-label-md" style="text-transform:uppercase;letter-spacing:0.1em;opacity:0.8;">Pro Status</h4>
+                <p class="text-headline-sm" style="margin-top:4px;">Active</p>
+            </div>
+            <p style="font-size:12px;opacity:0.8;margin-top:var(--space-xl);">Unlimited templates enabled</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="margin-top:var(--space-2xl);padding-top:var(--space-xl);border-top:1px solid var(--outline-variant);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-md);">
+            <div style="display:flex;align-items:center;gap:var(--space-sm);">
+                <span class="text-label-md font-bold">ResumeCraft</span>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);">© 2024 ResumeCraft. Built for professionals.</p>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" href="#">Privacy Policy</a>
+                <a class="footer-link" href="#">Terms of Service</a>
+                <a class="footer-link" href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<!-- Floating Action Button -->
+<a href="{{ url_for('create_resume') }}" class="btn-fab" title="Quick Create">
+    <span class="material-symbols-outlined" style="font-size:28px;">add</span>
+</a>
+
+<!-- Optimization Tips Modal -->
+<div id="tips-overlay-modal" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h3>
+                <span class="material-symbols-outlined" style="color:var(--primary);">trending_up</span>
+                Resume Optimization Tips
+            </h3>
+            <button class="custom-modal-close" id="tips-modal-close">×</button>
+        </div>
+        <div class="custom-modal-body">
+            <p class="text-body-md" style="margin-bottom:var(--space-md);color:var(--on-surface-variant);">Follow these expert recommendations to maximize your resume completeness and ATS screening rate.</p>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                {% if tips %}
+                    {% for tip in tips %}
+                    <div class="tip-item">
+                        <span class="material-symbols-outlined" style="color:var(--primary);margin-top:2px;">info</span>
+                        <div>
+                            <div style="font-weight:600;font-size:13px;">Pending Optimization</div>
+                            <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">{{ tip }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="tip-item completed">
+                        <span class="material-symbols-outlined" style="color:#10b981;margin-top:2px;">check_circle</span>
+                        <div>
+                            <div style="font-weight:600;font-size:13px;color:#065f46;">Excellent Work!</div>
+                            <div style="font-size:12px;color:#047857;margin-top:2px;">Your resume profile is 100% complete and fully optimized for job hunting!</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn btn-primary" id="tips-modal-ok">Got it</button>
+        </div>
+    </div>
+</div>
+
+<!-- Help Overlay Modal -->
+<div id="help-overlay-modal" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h3>
+                <span class="material-symbols-outlined">help</span>
+                ResumeCraft Support Center
+            </h3>
+            <button class="custom-modal-close" id="help-modal-close">×</button>
+        </div>
+        <div class="custom-modal-body">
+            <h4 style="font-weight:700;color:var(--primary);">Frequently Asked Questions</h4>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div>
+                    <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">How does the AI Resume Writer work?</h5>
+                    <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">When editing a resume, click the **AI Writer** button next to Summary or Experience. Enter your job role and keywords, then click Generate. The AI will draft high-impact statements that you can instantly insert into your fields.</p>
+                </div>
+                <div style="height:1px;background:var(--outline-variant);"></div>
+                <div>
+                    <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">How do I download a PDF of my resume?</h5>
+                    <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">Simply click on the **Download PDF** button in the header of the resume editor. The PDF will be created dynamically and saved in your computer's Downloads folder.</p>
+                </div>
+                <div style="height:1px;background:var(--outline-variant);"></div>
+                <div>
+                    <h5 style="font-weight:600;font-size:14px;margin-bottom:4px;">What is Profile Completeness?</h5>
+                    <p style="font-size:13px;color:var(--on-surface-variant);line-height:1.5;">Profile Completeness measures how comprehensive your default resume is. Complete all five steps (Basics, Work History, Education, Skills, and Projects) to achieve a 100% score and ensure your resume is fully optimized for ATS filters.</p>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn btn-primary" id="help-modal-ok">Got it</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
