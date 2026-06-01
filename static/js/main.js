@@ -796,16 +796,17 @@ function initScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('in-view');
+            } else {
+                entry.target.classList.remove('in-view');
             }
         });
-    }, { threshold: 0.1 });
+    }, { 
+        threshold: 0.05,
+        rootMargin: '-30px 0px -30px 0px'
+    });
 
     document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 600ms ease-out';
         observer.observe(el);
     });
 }

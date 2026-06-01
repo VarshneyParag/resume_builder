@@ -1924,3 +1924,37 @@ a:hover {
 .switch-input:checked + .switch-slider::before {
     transform: translateX(20px);
 }
+
+/* ---- Dynamic Scroll Animations ---- */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(35px) scale(0.98);
+    transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1), transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+
+.animate-on-scroll.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Bento items and Steps items fade-away and spring staggering */
+.bento-item, .step-item {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1), transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.in-view .bento-item, .in-view .step-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.in-view .bento-item:nth-child(1) { transition-delay: 50ms; }
+.in-view .bento-item:nth-child(2) { transition-delay: 150ms; }
+.in-view .bento-item:nth-child(3) { transition-delay: 250ms; }
+.in-view .bento-item:nth-child(4) { transition-delay: 350ms; }
+
+.in-view .step-item:nth-child(1) { transition-delay: 100ms; }
+.in-view .step-item:nth-child(2) { transition-delay: 250ms; }
+.in-view .step-item:nth-child(3) { transition-delay: 400ms; }
