@@ -1,76 +1,67 @@
-# 📝 ResumeCraft: Advanced AI-Powered Resume Builder
+<div align="center">
+  <img src="https://img.icons8.com/color/120/000000/resume.png" alt="ResumeCraft Logo">
+  
+  # 🚀 ResumeCraft
+  **The Next-Generation AI-Powered Resume Builder**
+  
+  [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+  [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+  [![SQLite](https://img.shields.io/badge/SQLite-Database-003B57.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
+  [![License](https://img.shields.io/badge/License-MIT-success.svg?style=for-the-badge)](#license)
+  [![Live Demo](https://img.shields.io/badge/Live_Demo-Online-success.svg?style=for-the-badge&logo=vercel)](https://resume-craft-builder.onrender.com)
+  
+  [**View Live Application**](https://resume-craft-builder.onrender.com) • [**Report Bug**](https://github.com/VarshneyParag/resume_builder/issues) • [**Request Feature**](https://github.com/VarshneyParag/resume_builder/issues)
+</div>
 
-[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Framework](https://img.shields.io/badge/framework-Flask-lightgrey.svg)](https://flask.palletsprojects.com/)
-[![Database](https://img.shields.io/badge/database-SQLite-green.svg)](https://sqlite.org/)
-[![License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+<br />
 
-**ResumeCraft** is a state-of-the-art, feature-rich web application designed to help job seekers build premium, ATS-friendly resumes in minutes. With a gorgeous dark-themed modern UI, an interactive step-by-step editor, real-time previewing, integrated **AI writing assistance**, and seamless PDF downloads, it delivers an outstanding user experience.
-
----
-
-## ✨ Outstanding Features
-
-- 🤖 **Dynamic AI Writing Assistant**: Stuck on phrasing? The integrated client-side AI Writer modal targets active text areas (like Summaries, Work Experience, or Projects) and runs dynamic typing animations utilizing custom backend recommendations tailored to your job role and tech stack.
-- 📈 **Dynamic Profile Completeness & Optimizer**: Features a mathematical progress bar on the dashboard showing how complete your profile is. Click "View Optimization Tips" for a breakdown of which columns are missing to hit 100%.
-- 💾 **Live Auto-Save & Sync**: Every update is automatically cached. When you click download, all form inputs are instantly committed to SQLite via an AJAX POST before rendering the document.
-- 🖨️ **Zero-Dependency PDF Compilation**: Solves common native library conflicts on Windows by utilizing client-side `html2pdf.js` inside templates to download a perfect, highly-polished PDF directly to the Downloads folder.
-- ⚙️ **Interactive Settings & Toggles**: A robust settings dashboard supporting username/password updates, validation rules, and integration toggles (e.g. Google Accounts).
-- 🔑 **Simulated Google OAuth Authentication**: Single-click Google login that automatically registers new users and initializes a pre-filled professional default template.
-- 🔔 **Contextual Dropdowns & Notifications**: Real-time notifications and an interactive global header menu for user profiles.
-- 💬 **Sidebar FAQ & Help Center**: A beautiful overlay panel containing immediate FAQs, markdown guides, and support links directly accessible from both the dashboard and editor views.
+> **ResumeCraft** is a state-of-the-art, feature-rich web application designed to help job seekers build premium, **ATS-friendly resumes** in minutes. Featuring an integrated AI Writing Assistant, a glassmorphic modern UI, dynamic completeness tracking, and a fully native-like mobile experience.
 
 ---
 
-## 📂 Codebase Directory Structure
+## ✨ Why ResumeCraft? (Features)
 
-Here is a visual overview of how the repository is structured:
+*   📱 **Native App Mobile Experience**: Beautifully engineered bottom-navigation bars, glassmorphism overlays, and fluid vertical stacking ensure the app feels like a premium native mobile application on your phone.
+*   🤖 **Dynamic AI Writing Assistant**: Stuck on phrasing? Let our AI draft high-impact bullet points for your Summary, Work Experience, or Projects based on your specific job role and tech stack.
+*   🎯 **ATS-Optimized Formatting**: Every downloaded resume is rigorously structured to pass modern Applicant Tracking Systems (ATS).
+*   🖨️ **Zero-Dependency PDF Compilation**: Solves common native library conflicts by utilizing ultra-fast client-side `html2pdf.js`. Generates pixel-perfect PDFs directly to your Downloads folder.
+*   📈 **Profile Optimizer & Completeness Tracker**: Features a mathematical progress bar and contextual popup tips guiding you to hit 100% profile completeness.
+*   💾 **Live Auto-Save & Sync**: Never lose your progress. Edits are seamlessly synchronized with our secure backend architecture.
+*   🔑 **Frictionless Onboarding**: Includes Google OAuth simulation for secure, one-click registration and login.
 
-```text
-resume_builder/
-├── app.py                # Main Flask Application & Route Controllers
-├── config.py             # App Configurations (DB Path, Secret Keys)
-├── models.py             # SQLAlchemy Database Models (User, Resume, PersonalDetails, etc.)
-├── requirements.txt      # Python Dependencies (Flask, SQLAlchemy, etc.)
-├── .gitignore            # Git exclusion rules
-├── pdf_generator/        # Server-side PDF generation package
-│   ├── __init__.py
-│   └── generator.py      # WeasyPrint wrapper (with elegant HTML fallback)
-├── static/               # Client-Side Assets
-│   ├── css/
-│   │   └── style.css     # Premium Responsive Stylesheets (Glassmorphism, Dark/Light modules)
-│   └── js/
-│       └── main.js       # Complete Frontend Interactions (AI Writer, Steppers, Modals, Auto-Save)
-├── templates/            # Jinja2 HTML Templates
-│   ├── base.html         # Global Shell Navigation & Sidebars
-│   ├── dashboard.html    # User Hub (Resume management, completeness tracker)
-│   ├── index.html        # Elegant landing page with pricing, features & testimonials
-│   ├── login.html        # Secure Login layout (Supports Google login simulator)
-│   ├── register.html     # Sign Up form
-│   ├── resume_form.html  # Immersive Stepper Editor with Live HTML Preview & AI Writer
-│   ├── resume_preview.html # Live print layout & HTML preview render
-│   ├── pdf_template.html   # Dedicated PDF stylesheet & layout with html2pdf compiler
-│   └── settings.html     # Detailed User Account & Integration Settings Panel
-└── utils/                # General Helpers & Validation Modules
-    ├── __init__.py
-    ├── helpers.py        # General utilities
-    └── validators.py     # Inputs validator rules
-```
+---
+
+## 🎨 UI Showcase
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><b>🖥️ Desktop Editor Layout</b></td>
+      <td align="center"><b>📱 Mobile Native Dashboard</b></td>
+    </tr>
+    <tr>
+      <td align="center">Split-pane side-by-side editing with live preview rendering.</td>
+      <td align="center">Glassmorphic bottom-nav bars with intelligent stacking.</td>
+    </tr>
+  </table>
+</div>
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Python 3.x, Flask, SQLAlchemy (SQLite Database)
-- **Frontend**: Responsive HTML5, Vanilla CSS3 (Custom Glassmorphic styles, custom variables), JavaScript (ES6+ Web APIs)
-- **PDF Compilation**: `html2pdf.js` integration with non-blocking print layouts
-- **Animation**: CSS Transition matrices and real-time JavaScript typing engine
+| Architecture | Technologies |
+| :--- | :--- |
+| **Frontend UI/UX** | Responsive HTML5, Vanilla CSS3 (Custom Variables, CSS Grids), JavaScript ES6+ |
+| **Backend API** | Python 3.x, Flask (WSGI Web Framework), Flask-Login, Flask-WTF |
+| **Database** | SQLAlchemy ORM, SQLite |
+| **Cloud Deployment**| Render (Gunicorn WSGI HTTP Server) |
 
 ---
 
 ## 🚀 Local Installation & Setup
 
-Get ResumeCraft up and running on your local machine in under 5 minutes:
+Want to run ResumeCraft on your own machine? It takes less than 5 minutes:
 
 ### 1. Clone the Repository
 ```bash
@@ -81,9 +72,10 @@ cd resume_builder
 ### 2. Create a Virtual Environment
 ```bash
 python -m venv venv
-# On Windows (Command Prompt)
+
+# On Windows:
 venv\Scripts\activate
-# On macOS/Linux
+# On macOS/Linux:
 source venv/bin/activate
 ```
 
@@ -92,33 +84,38 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Set Up Environment Variables
-Create a file named `.env` in the root folder and add your secret key:
+### 4. Set Environment Variables
+Create a file named `.env` in the root folder:
 ```env
 FLASK_APP=app.py
 FLASK_ENV=development
-SECRET_KEY=your-super-secret-key-change-this-in-production
+SECRET_KEY=your-super-secret-key
 ```
 
 ### 5. Run the Application
 ```bash
 python app.py
 ```
-Open your browser and navigate to **`http://localhost:5000`**.
+Open your browser and navigate to **`http://localhost:5000`**. The database tables will be created automatically on startup!
 
 ---
 
-## 📸 Key UI Screenshots
+## 🤝 Contributing
 
-### Home & Stepper Editor
-*A high-fidelity resume builder interface including Live Side-by-Side Previews, an AI Writer popup modal, progress meters, and dynamic completeness status updates.*
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## 📄 License
-Distributed under the MIT License. See `LICENSE` for more details.
+## ⭐️ Show your Support!
 
----
+If you found this project helpful, learned something new, or used it to land a job, please **leave a ⭐ Star** on this repository! It helps the project grow and motivates further open-source development.
 
-## ⭐️ Support & Feedback
-If you like **ResumeCraft**, please star this repository! It helps recruiters notice the project and supports future developments. For feedback, feel free to open a Github Issue.
+<div align="center">
+  <p>Built with ❤️ by Parag Varshney.</p>
+</div>
