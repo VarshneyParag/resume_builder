@@ -1,7 +1,6 @@
 import os
-import re
 from flask import (Flask, render_template, request, redirect, url_for,
-                   flash, send_file, jsonify, abort)
+                   flash, send_file, jsonify)
 from flask_login import (LoginManager, login_user, logout_user,
                          login_required, current_user)
 from flask_wtf.csrf import CSRFProtect
@@ -14,9 +13,14 @@ from utils.validators import validate_email, validate_password, validate_name, s
 from pdf_generator.generator import generate_resume_pdf, get_pdf_available
 
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 # ── App Factory ──────────────────────────────────────────────────────────
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Fix for proxy (Render.com) to handle HTTPS redirects correctly
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 # Initialize extensions
 db.init_app(app)
@@ -135,14 +139,25 @@ def calculate_completeness(resume):
     pd_score = 0
     missing_fields = []
     if pd:
-        if pd.full_name: pd_score += 5
-        else: missing_fields.append("Full Name")
-        if pd.email: pd_score += 5
-        else: missing_fields.append("Email")
-        if pd.phone: pd_score += 5
-        else: missing_fields.append("Phone")
-        if pd.job_title: pd_score += 5
-        else: missing_fields.append("Job Title")
+        if pd.full_name:
+            pd_score += 5
+        else:
+            missing_fields.append("Full Name")
+            
+        if pd.email:
+            pd_score += 5
+        else:
+            missing_fields.append("Email")
+            
+        if pd.phone:
+            pd_score += 5
+        else:
+            missing_fields.append("Phone")
+            
+        if pd.job_title:
+            pd_score += 5
+        else:
+            missing_fields.append("Job Title")
     else:
         missing_fields = ["Full Name", "Email", "Phone", "Job Title"]
     
@@ -605,6 +620,6 @@ if __name__ == '__main__':
         print(f"[PDF] Generation: {'WeasyPrint (Full PDF)' if get_pdf_available() else 'HTML Fallback (Browser Print)'}")
         print(f"[DB] Database: {app.config['SQLALCHEMY_DATABASE_URI']}")
         print(f"[DIR] Uploads: {app.config['UPLOAD_FOLDER']}")
-        print(f"\n[*] Starting ResumeCraft on http://localhost:5000\n")
+        print("\n[*] Starting ResumeCraft on http://localhost:5000\n")
 
     app.run(debug=True, host='0.0.0.0', port=5000)

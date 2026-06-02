@@ -9,6 +9,9 @@ db = SQLAlchemy()
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
@@ -31,6 +34,9 @@ class User(UserMixin, db.Model):
 
 class Resume(db.Model):
     __tablename__ = 'resumes'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -58,6 +64,9 @@ class Resume(db.Model):
 class PersonalDetails(db.Model):
     __tablename__ = 'personal_details'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     id = db.Column(db.Integer, primary_key=True)
     resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'), nullable=False, unique=True)
     full_name = db.Column(db.String(200), default='')
@@ -74,6 +83,9 @@ class PersonalDetails(db.Model):
 class Education(db.Model):
     __tablename__ = 'education'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     id = db.Column(db.Integer, primary_key=True)
     resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'), nullable=False)
     degree = db.Column(db.String(200), default='')
@@ -84,6 +96,9 @@ class Education(db.Model):
 
 class WorkExperience(db.Model):
     __tablename__ = 'work_experience'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     id = db.Column(db.Integer, primary_key=True)
     resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'), nullable=False)
@@ -97,6 +112,9 @@ class WorkExperience(db.Model):
 class Project(db.Model):
     __tablename__ = 'projects'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     id = db.Column(db.Integer, primary_key=True)
     resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'), nullable=False)
     name = db.Column(db.String(200), default='')
@@ -107,6 +125,9 @@ class Project(db.Model):
 
 class Skill(db.Model):
     __tablename__ = 'skills'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     id = db.Column(db.Integer, primary_key=True)
     resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'), nullable=False)
