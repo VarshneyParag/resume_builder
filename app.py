@@ -262,6 +262,11 @@ def update_resume(resume_id):
         db.session.add(pd)
 
     pd.full_name = sanitize_input(request.form.get('full_name', ''))
+    
+    # Auto-update resume title based on full name if it hasn't been custom set
+    if pd.full_name and (resume.title == 'Untitled Resume' or resume.title == f"{current_user.name}'s Resume"):
+        resume.title = f"{pd.full_name}'s Resume"
+
     pd.job_title = sanitize_input(request.form.get('job_title', ''))
     pd.email = request.form.get('email', '').strip()
     pd.phone = sanitize_input(request.form.get('phone', ''))

@@ -2281,3 +2281,10 @@ a:hover {
         border-radius: var(--radius-xl);
     }
 }
+
+/* Fix Top Nav Overlap on Mobile */
+@media (max-width: 768px) {
+    .top-nav {
+        position: relative !important;
+    }
+}
