@@ -48,6 +48,43 @@
 
 ---
 
+## 📂 Codebase Directory Structure
+
+Here is a visual overview of how the repository is structured:
+
+```text
+resume_builder/
+├── app.py                # Main Flask Application & Route Controllers
+├── config.py             # App Configurations (DB Path, Secret Keys)
+├── models.py             # SQLAlchemy Database Models (User, Resume, PersonalDetails, etc.)
+├── requirements.txt      # Python Dependencies (Flask, SQLAlchemy, etc.)
+├── .gitignore            # Git exclusion rules
+├── pdf_generator/        # Server-side PDF generation package
+│   ├── __init__.py
+│   └── generator.py      # WeasyPrint wrapper (with elegant HTML fallback)
+├── static/               # Client-Side Assets
+│   ├── css/
+│   │   └── style.css     # Premium Responsive Stylesheets (Glassmorphism, Dark/Light modules)
+│   └── js/
+│       └── main.js       # Complete Frontend Interactions (AI Writer, Steppers, Modals, Auto-Save)
+├── templates/            # Jinja2 HTML Templates
+│   ├── base.html         # Global Shell Navigation & Sidebars
+│   ├── dashboard.html    # User Hub (Resume management, completeness tracker)
+│   ├── index.html        # Elegant landing page with pricing, features & testimonials
+│   ├── login.html        # Secure Login layout (Supports Google login simulator)
+│   ├── register.html     # Sign Up form
+│   ├── resume_form.html  # Immersive Stepper Editor with Live HTML Preview & AI Writer
+│   ├── resume_preview.html # Live print layout & HTML preview render
+│   ├── pdf_template.html   # Dedicated PDF stylesheet & layout with html2pdf compiler
+│   └── settings.html     # Detailed User Account & Integration Settings Panel
+└── utils/                # General Helpers & Validation Modules
+    ├── __init__.py
+    ├── helpers.py        # General utilities
+    └── validators.py     # Inputs validator rules
+```
+
+---
+
 ## 🛠️ Technology Stack
 
 | Architecture | Technologies |
