@@ -2169,3 +2169,115 @@ a:hover {
         width: 100% !important;
     }
 }
+
+/* ==========================================================================
+   PREMIUM MOBILE ENHANCEMENTS (NATIVE APP FEEL)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. Dashboard Bottom Navigation Bar */
+    .sidebar-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+        z-index: 9999;
+        display: flex;
+        flex-direction: row !important;
+        justify-content: space-around;
+        align-items: center;
+        padding: 8px var(--space-md) calc(8px + env(safe-area-inset-bottom));
+        margin: 0 !important;
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .sidebar-link {
+        flex-direction: column !important;
+        gap: 4px !important;
+        font-size: 11px !important;
+        font-weight: 600;
+        padding: 6px 12px !important;
+        color: var(--on-surface-variant) !important;
+        border-radius: var(--radius-md) !important;
+        transition: all 0.2s ease;
+    }
+    
+    .sidebar-link .material-symbols-outlined {
+        font-size: 24px !important;
+        margin: 0 !important;
+    }
+    
+    .sidebar-link.active {
+        background: transparent !important;
+        color: var(--primary) !important;
+    }
+
+    .sidebar-link.active .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1;
+        transform: translateY(-2px);
+    }
+
+    .main-with-sidebar {
+        padding-bottom: 90px !important; /* Space for bottom nav */
+    }
+
+    .btn-fab {
+        bottom: 90px !important;
+        right: 20px !important;
+        transform: scale(0.9);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* 2. Landing Page Navigation (Sleek App-like header) */
+    .top-nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .top-nav-inner {
+        flex-direction: column;
+        gap: var(--space-md);
+        padding: var(--space-md);
+    }
+    .top-nav-inner > div {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .top-nav .nav-links {
+        display: none !important; /* Hide secondary links on mobile to save space */
+    }
+    .top-nav .btn {
+        flex: 1;
+        justify-content: center;
+        text-align: center;
+        padding: 12px;
+        border-radius: var(--radius-full);
+    }
+
+    /* 3. Enhanced Touch Targets and Spacing */
+    input.form-input, select.form-select, textarea.form-textarea {
+        font-size: 16px !important; /* Prevent iOS zoom */
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+    }
+
+    .btn {
+        min-height: 48px;
+        border-radius: var(--radius-full);
+    }
+
+    .card {
+        border-radius: var(--radius-xl);
+        padding: var(--space-lg);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .stats-card, .pro-card {
+        border-radius: var(--radius-xl);
+    }
+}
